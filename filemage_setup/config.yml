@@ -1,0 +1,99 @@
+###
+# Use a self-signed certificate by default.
+#tls_certificate: /opt/filemage/default.cert
+#tls_certificate_key: /opt/filemage/default.key
+
+management_port: 8443
+workspace_port: 443
+
+###
+# Let's Encrypt provides free TLS certificates using the ACME protocol.
+# Port 443 or 80 must be publicly reachable to use this.
+acme_use_auto_tls: true
+acme_hostname:
+  - nepgcoe-benchmarking.theiagen.com
+  - benchmarking.nepgcoe.org
+acme_contact_email: andrew.lang@theiagen.com
+
+###
+# Enhanced password rules.
+#password_expire_days: 90
+#password_min_length: 8
+#password_requirements:
+#  upper_case: true
+#  lower_case: true
+#  digits: true
+#  special_characters: true
+
+###
+# Ban IPs due to excessive login failures.
+#lockout:
+#  enabled: true
+#  max_attempts: 5
+#  interval: 60
+#  ban_duration: 120
+
+###
+# Log all authentication attempts.
+#authentication_log:
+#  enabled: true
+#  path: /var/log/filemage/auth.log
+#  format: logfmt
+
+###
+# The workspace portal is a browser based file sharing interface.
+# It is disabled by default. Uncomment this to enable it on port 443.
+# You may optionally move the management portal to another port, such as 8443.
+# Don't forget to adjust firewall settings.
+#workspace_port: 443
+#management_port: 8443
+
+###
+# To enable multi-factor authentication using OTP tokens, add an issuer label.
+# This label will appear as the application name of the login token.
+#otp_issuer: FileMage
+
+###
+# The workspace portal style and branding can be customized.
+workspace_logo: /home/andrew_lang/filemage_setup/pgcoe-network-graphic-element.png
+#workspace_favicon: /etc/filemage/company-favicon.ico
+#workspace_css:
+workspace_css:
+#  button_color: "#f9a825"                # Matches primary button color
+#  button_text_color: "#ffffff"            # White text for contrast
+#  button_text_inactive_color: "#ffffff"   # Ensuring inactive buttons remain readable
+#  navbar_color: "#0d47a1"                 # Deep blue for the navigation bar
+  login_text: "PGCOE File Portal"       # Updating branding
+
+###
+# Add an email server for password reset and account setup emails.
+#smtp_host: smtp.sendgrid.net
+#smtp_sender: no-reply@mycompany.com
+#smtp_username: apikey
+#smtp_password: SG.YW_xsmQx...
+
+###
+# Password reset and account setup emails can be customized using templates.
+#password_reset_template: /opt/filemage/templates/reset_sendgrid.html
+#welcome_email_template: /opt/filemage/templates/welcome_sendgrid.html
+
+###
+# By default the workspace portal transfers files directly from the browser to
+# the cloud provider's storage service. Enable this setting to proxy file
+# transfers through the gateway virtual machine instead.
+#workspace_proxy_transfers: true
+
+###
+# Detailed protocol and connection logging is available for troubleshooting.
+#sftp_log:
+#  enabled: true
+#  path: /var/log/filemage/sftp.log
+#  format: logfmt
+#ftp_log:
+#  enabled: true
+#  path: /var/log/filemage/ftp.log
+#  format: logfmt
+#connection_log:
+#  enabled: true
+#  path: /var/log/filemage/conn.log
+#  format: logfmt
