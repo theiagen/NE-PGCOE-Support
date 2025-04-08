@@ -2,8 +2,8 @@ version 1.0
 
 task version_capture {
   input {
-    String? timezone
     String docker = "us-docker.pkg.dev/general-theiagen/theiagen/alpine-plus-bash:3.20.0"
+    String? timezone
   }
   meta {
     volatile: true
