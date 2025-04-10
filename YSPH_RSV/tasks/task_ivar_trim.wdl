@@ -3,7 +3,8 @@ version 1.0
 task ivar_trim {
   input {
     File aligned_bam
-    String samplename
+    File aligned_bai
+    String output_prefix
     File primer_bed
 
     Int cpu = 2
@@ -18,17 +19,17 @@ task ivar_trim {
     samtools --version | head -n1 | tee SAMTOOLS_VERSION
 
     echo "DEBUG: trimming primers"
-    ivar trim -i ~{aligned_bam} -b ~{primer_bed} -o ~{samplename}_trimmed.bam -e 
+    ivar trim -i ~{aligned_bam} -b ~{primer_bed} -o ~{output_prefix}_trimmed.bam -e 
 
     echo "DEBUG: sorting and indexing trimmed bam"
-    samtools sort -@ 4 -o ~{samplename}_trimmed_sorted.bam ~{samplename}_trimmed.bam
-    samtools index ~{samplename}_trimmed_sorted.bam
+    samtools sort -@ 4 -o ~{output_prefix}_trimmed_sorted.bam ~{output_prefix}_trimmed.bam
+    samtools index ~{output_prefix}_trimmed_sorted.bam
   >>>
   output {
     String ivar_version = read_string("IVAR_VERSION")
     String samtools_version = read_string("SAMTOOLS_VERSION")
-    File trimmed_bam = "~{samplename}_trimmed_sorted.bam"
-    File trimmed_bai = "~{samplename}_trimmed_sorted.bam.bai"
+    File trimmed_bam = "~{output_prefix}_trimmed_sorted.bam"
+    File trimmed_bai = "~{output_prefix}_trimmed_sorted.bam.bai"
   }
   runtime {
     docker: docker

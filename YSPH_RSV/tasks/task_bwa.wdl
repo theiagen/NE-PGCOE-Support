@@ -4,7 +4,7 @@ task bwa {
   input {
     File read1
     File read2
-    String samplename
+    String output_prefix
     File reference_fasta
     
     Int cpu = 6
@@ -26,37 +26,37 @@ task bwa {
       -t ~{cpu} \
       ~{reference_fasta} \
       ~{read1} ~{read2} \
-      -o ~{samplename}.bam
+      -o ~{output_prefix}.bam
 
     echo "DEBUG: generating flagstat"
     samtools flagstat \
-      -O tsv ~{samplename}.bam \
-      > ~{samplename}.flagstat.txt
+      -O tsv ~{output_prefix}.bam \
+      > ~{output_prefix}.flagstat.txt
 
     echo "DEBUG: removing unaligned reads from bam"
     samtools view -b \
       -F 4 \
       -F 2048 \
-      -o ~{samplename}_aligned.bam \
-      ~{samplename}.bam
+      -o ~{output_prefix}_aligned.bam \
+      ~{output_prefix}.bam
 
     echo "DEBUG: sorting and indexing aligned bamfile"
     samtools sort \
       -@ ~{cpu} \
-      -o ~{samplename}_sorted.bam \
-      ~{samplename}_aligned.bam
-    samtools index ~{samplename}_sorted.bam
+      -o ~{output_prefix}_sorted.bam \
+      ~{output_prefix}_aligned.bam
+    samtools index ~{output_prefix}_sorted.bam
 
     echo "DEBUG: calculating depth"
-    samtools depth -a -H ~{samplename}_sorted.bam > ~{samplename}_depth.txt
+    samtools depth -a -H ~{output_prefix}_sorted.bam > ~{output_prefix}_depth.txt
   >>>
   output {
     String bwa_version = read_string("BWA_VERSION")
     String samtools_version = read_string("SAMTOOLS_VERSION")
-    File flagstat = "~{samplename}.flagstat.txt"
-    File sorted_bam = "~{samplename}_sorted.bam"
-    File sorted_bai = "~{samplename}_sorted.bam.bai"
-    File depth = "~{samplename}_depth.txt"
+    File flagstat = "~{output_prefix}.flagstat.txt"
+    File sorted_bam = "~{output_prefix}_sorted.bam"
+    File sorted_bai = "~{output_prefix}_sorted.bam.bai"
+    File depth_file = "~{output_prefix}_depth.txt"
   }
   runtime {
     docker: docker

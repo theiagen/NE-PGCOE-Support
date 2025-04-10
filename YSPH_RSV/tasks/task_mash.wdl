@@ -42,22 +42,29 @@ task mash {
       > ~{samplename}_mash.txt
 
     echo "DEBUG: Pulling matches below ~{max_mash_dist}/~{max_mash_prob} from mash output"
-    awk -v dist=~{max_mash_dist} -v prob=~{max_mash_prob} -v sample=~{samplename} '($3+0 < dist+0 && $4+0 < prob+0) {sub(".fasta","",$1); print sample, $1, $3}' ~{samplename}_mash.txt | sort -k3,3n > ~{samplename}_calls.txt
+    awk -v dist=~{max_mash_dist} -v prob=~{max_mash_prob} -v sample=~{samplename} '($3+0 < dist+0 && $4+0 < prob+0) {sub(".fasta","",$1); print sample, $1}' ~{samplename}_mash.txt > ~{samplename}_calls.txt
 
-    echo "DEBUG: Identifying the most likely reference"
-    FILENAME=$(head -n1 ~{samplename}_calls.txt | cut -f2)
-    REF_BASENAME=$(basename ${FILENAME/.fasta/})
+    while read -r line; do
+      FILENAME=$(echo "$line" | cut -f2)
+      REF_BASENAME=$(basename ${FILENAME/.fasta/})
 
-    echo "DEBUG: extracting path of the reference files for downstream usage"
-    REFERENCE_FASTA="~{reference_files_gcuri}/${REF_BASENAME}.fasta"
-    REFERENCE_GFF="~{reference_files_gcuri}/${REF_BASENAME}.gff"
+      echo "DEBUG: extracting path of the reference files for downstream usage"
+      REFERENCE_FASTA="~{reference_files_gcuri}/${REF_BASENAME}.fasta"
+      REFERENCE_GFF="~{reference_files_gcuri}/${REF_BASENAME}.gff"
+      echo "$REFERENCE_FASTA" >> ~{samplename}_fastas.txt
+      echo "$REFERENCE_GFF" >> ~{samplename}_gffs.txt
+      echo "$REF_BASENAME" >> ~{samplename}_references.txt
+      echo "~{samplename}" >> ~{samplename}_samples.txt
+    done < ~{samplename}_calls.txt
   >>>
   output {
     String mash_version = read_string("MASH_VERSION")
     File mash_calls = "~{samplename}_calls.txt"
     File mash_output = "~{samplename}_mash.txt"
-    File reference_fasta = read_string("REFERENCE_FASTA")
-    File reference_gff = read_string("REFERENCE_GFF")
+    Array[File] reference_fastas = read_lines("~{samplename}_fastas.txt")
+    Array[File] reference_gffs = read_lines("~{samplename}_gffs.txt")
+    Array[String] reference_names = read_lines("~{samplename}_references.txt")
+    Array[String] associated_samples = read_lines("~{samplename}_samples.txt")
   }
   runtime {
     docker: docker
