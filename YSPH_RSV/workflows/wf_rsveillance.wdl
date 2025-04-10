@@ -159,13 +159,13 @@ workflow rsveillance {
         gene_depths = read_lines(create_reference_groups.all_gene_depths[i]),
         reference_name = current_reference_name
     }
-    # call stats.get_genotyping_report {
-    #   input:
-    #     trimmed_vcf = bcftools_trimmed.filtered_vcf,
-    #     untrimmed_vcf = bcftools_untrimmed.filtered_vcf,
-    #     primer_bed = primer_bed,
-    #     reference_name = current_reference_name
-    # }
+    call stats.get_genotyping_report {
+      input:
+        trimmed_vcf = bcftools_trimmed.filtered_vcf,
+        untrimmed_vcf = bcftools_untrimmed.filtered_vcf,
+        primer_bed = reference_files_gcuri + "/" + current_reference_name + "_primer.bed",
+        reference_name = current_reference_name
+    }
     # call stats.get_diversity_metrics {
     #   input:
     #     bcftools_vcf = bcftools_trimmed.filtered_vcf,
