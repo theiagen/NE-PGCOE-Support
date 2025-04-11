@@ -90,7 +90,7 @@ workflow rsveillance {
       call stats.get_depths {
         input:
           depth_file = bwa.depth_file,
-          amplicon_bed = reference_files_gcuri + "/" + assembly_current_reference_name + "_amplicon.bed",,
+          amplicon_bed = reference_files_gcuri + "/" + assembly_current_reference_name + "_amplicon.bed",
           reference_gff = assembly_current_reference_gff,
           reference_name = assembly_current_reference_name,
           associated_sample = current_sample
