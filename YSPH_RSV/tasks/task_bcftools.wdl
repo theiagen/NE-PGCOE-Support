@@ -51,5 +51,14 @@ task bcftools {
     File filtered_vcf = "~{output_prefix}_all.vcf.gz"
     File filtered_vcf_index = "~{output_prefix}_all.vcf.gz.tbi"
   }
+  runtime {
+    docker: docker
+    memory: memory + " GB"
+    cpu: cpu
+    disks:  "local-disk " + disk_size + " SSD"
+    disk: disk_size + " GB"
+    preemptible: 0
+    maxRetries: 3
+  }
 }
 
