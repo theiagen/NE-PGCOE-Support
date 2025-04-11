@@ -32,7 +32,7 @@ task mash_index {
     done
 
     echo "DEBUG: merging mash indices"
-    mash paste -o index_all.msh ${FASTAS[*]}
+    mash paste index_all.msh ${FASTAS[*]}
   >>>
   output {
     String mash_version = read_string("MASH_VERSION")
