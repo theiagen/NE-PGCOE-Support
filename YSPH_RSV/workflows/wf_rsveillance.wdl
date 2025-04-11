@@ -19,9 +19,6 @@ workflow rsveillance {
 
     String reference_prefixes # **space**-delimited list of the prefixes of the potential references
     String reference_files_gcuri
-
-    File primer_bed
-    File amplicon_bed
   }
   call versioning.version_capture {
     input:
@@ -46,56 +43,56 @@ workflow rsveillance {
         reference_mash_index = mash_index.mash_all_index
     }
     scatter (index in range(length(mash.reference_fastas))) {
-      File first_current_reference_fasta = mash.reference_fastas[index]
-      File first_current_reference_gff = mash.reference_gffs[index]
-      String first_current_reference_name = mash.reference_names[index]
+      File assembly_current_reference_fasta = mash.reference_fastas[index]
+      File assembly_current_reference_gff = mash.reference_gffs[index]
+      String assembly_current_reference_name = mash.reference_names[index]
 
       call bwa_task.bwa {
         input:
           read1 = current_read1,
           read2 = current_read2,
-          output_prefix = current_sample + "_" + first_current_reference_name,
-          reference_fasta = first_current_reference_fasta,
+          output_prefix = current_sample + "_" + assembly_current_reference_name,
+          reference_fasta = assembly_current_reference_fasta,
       }
       call ivar_trim_task.ivar_trim {
         input:
           aligned_bam = bwa.sorted_bam,
           aligned_bai = bwa.sorted_bai,
-          output_prefix = current_sample + "_" + first_current_reference_name,
-          primer_bed = primer_bed
+          output_prefix = current_sample + "_" + assembly_current_reference_name,
+          primer_bed = reference_files_gcuri + "/" + assembly_current_reference_name + "_primer.bed",
       }
       call ivar_consensus_task.ivar_consensus {
         input:
           trimmed_bam = ivar_trim.trimmed_bam,
           trimmed_bai = ivar_trim.trimmed_bai,
-          output_prefix = current_sample + "_" + first_current_reference_name,
-          reference_fasta = first_current_reference_fasta,
+          output_prefix = current_sample + "_" + assembly_current_reference_name,
+          reference_fasta = assembly_current_reference_fasta,
       }
       call ivar_variants_task.ivar_variants {
         input:
           mpileup = ivar_consensus.mpileup,
-          output_prefix = current_sample + "_" + first_current_reference_name,
-          reference_fasta = first_current_reference_fasta
+          output_prefix = current_sample + "_" + assembly_current_reference_name,
+          reference_fasta = assembly_current_reference_fasta
       }
       call stats.get_depth_histogram {
         input:
           depth_file = bwa.depth_file,
-          reference_name = first_current_reference_fasta,
+          reference_name = assembly_current_reference_fasta,
           associated_sample = current_sample
       }
       call stats.get_alignment_stats {
         input:
           alignment_flagstat = bwa.flagstat,
           depth_histogram = get_depth_histogram.depth_histogram,
-          reference_name = first_current_reference_fasta,
+          reference_name = assembly_current_reference_fasta,
           associated_sample = current_sample
       }
       call stats.get_depths {
         input:
           depth_file = bwa.depth_file,
-          amplicon_bed = amplicon_bed,
-          reference_gff = first_current_reference_gff,
-          reference_name = first_current_reference_name,
+          amplicon_bed = reference_files_gcuri + "/" + assembly_current_reference_name + "_amplicon.bed",,
+          reference_gff = assembly_current_reference_gff,
+          reference_name = assembly_current_reference_name,
           associated_sample = current_sample
       }
       call utility.create_sample_output_group {
@@ -104,8 +101,8 @@ workflow rsveillance {
           trimmed_bai = ivar_trim.trimmed_bai,
           untrimmed_bam = bwa.sorted_bam,
           untrimmed_bai = bwa.sorted_bai,
-          reference_fasta = first_current_reference_fasta,
-          reference_name = first_current_reference_name,
+          reference_fasta = assembly_current_reference_fasta,
+          reference_name = assembly_current_reference_name,
           depth_windows = get_depth_histogram.depth_windows,
           depth_histograms = get_depth_histogram.depth_histogram,
           alignment_stats = get_alignment_stats.alignment_stats,
