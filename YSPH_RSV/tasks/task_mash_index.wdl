@@ -21,7 +21,7 @@ task mash_index {
     FASTAS=(~{reference_prefixes})
 
     for index in "${!FASTAS[@]}"; do
-      echo "DEBUG: Localizing $i reference file: ${FASTAS[$index]}"
+      echo "DEBUG: Localizing $index reference file: ${FASTAS[$index]}"
       gcloud storage cp ~{reference_files_gcuri}/${FASTAS[$index]}.fasta .
 
       echo "DEBUG: Creating mash index for ${FASTAS[$index]}"
