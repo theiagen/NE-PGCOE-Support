@@ -166,11 +166,6 @@ workflow rsveillance {
         primer_bed = reference_files_gcuri + "/" + current_reference_name + "_primer.bed",
         reference_name = current_reference_name
     }
-    # call stats.get_diversity_metrics {
-    #   input:
-    #     bcftools_vcf = bcftools_trimmed.filtered_vcf,
-    #     depth_file = concatenate_stats_by_reference.depth
-    # }
     call stats.call_rsvab {
       input:
         concatenated_alignment_stats = concatenate_stats_by_reference.concatenated_alignment_stats,

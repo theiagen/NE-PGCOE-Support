@@ -9,7 +9,7 @@ task mash_index {
 
     Int cpu = 4
     Int disk_size = 100
-    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/mash-gcloud:2.3" # need to add gcloud storage though
+    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/mash-gcloud:2.3"
     Int memory = 4
   }
   command <<<
