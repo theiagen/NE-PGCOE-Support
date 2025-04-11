@@ -13,7 +13,7 @@ task mash {
     Int number_of_reads = 10000
     Int bloom_filter = 10
     String genome_size = "11k"
-    Float max_mash_prob = 1e-50
+    Float max_mash_prob = 0.00000000000000000000000000000000000000000000000001 # this is so silly but dockstore hated 1e-50
     Float max_mash_dist = 0.25
 
     Int cpu = 2
