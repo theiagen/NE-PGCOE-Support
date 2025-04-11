@@ -6,7 +6,6 @@ task ivar_consensus {
     File trimmed_bai
     String output_prefix
     File reference_fasta
-    File reference_fasta_index
 
     Int mpileup_min_base_quality = 0
     Int mpileup_max_depth = 10000
@@ -26,6 +25,7 @@ task ivar_consensus {
     samtools --version | head -n1 | tee SAMTOOLS_VERSION
 
     echo "DEBUG: indexing reference genome"
+    bwa index ~{reference_fasta}
 
     echo "DEBUG: generating mpileup"
     samtools mpileup -aa -A \
