@@ -28,7 +28,7 @@ task mash_index {
       mash sketch -g ~{genome_size} ${FASTAS[$index]}.fasta
 
       echo "DEBUG: updating reference array to point to the sketch"
-      FASTAS[$index]=${FASTAS[$index]/.fasta/.fasta.msh}
+      FASTAS[$index]=${FASTAS[$index]}.fasta.msh
     done
 
     echo "DEBUG: merging mash indices"
