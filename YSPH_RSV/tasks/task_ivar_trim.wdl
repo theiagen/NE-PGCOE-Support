@@ -19,7 +19,7 @@ task ivar_trim {
     samtools --version | head -n1 | tee SAMTOOLS_VERSION
 
     echo "DEBUG: trimming primers"
-    ivar trim -i ~{aligned_bam} -b ~{primer_bed} -o ~{output_prefix}_trimmed.bam -e 
+    ivar trim -i ~{aligned_bam} -b ~{primer_bed} -p ~{output_prefix}_trimmed -e 
 
     echo "DEBUG: sorting and indexing trimmed bam"
     samtools sort -@ 4 -o ~{output_prefix}_trimmed_sorted.bam ~{output_prefix}_trimmed.bam
