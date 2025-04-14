@@ -17,7 +17,7 @@ task get_depth_histogram {
   String output_prefix = "~{associated_sample}_~{reference_name}"
   command <<<
     echo "DEBUG: calculating the depth windows and depth histograph"
-    python3 get_depth_distribution.py \
+    get_depth_distribution.py \
       -d ~{depth_file} \
       -s ~{associated_sample} \
       -F ~{downsample_fraction} \
@@ -57,7 +57,7 @@ task get_alignment_stats {
   String output_prefix = "~{associated_sample}_~{reference_name}"
   command <<<
     echo "DEBUG: calculating alignment stats"
-    python3 get_align_stats.py \
+    get_align_stats.py \
       -s ~{associated_sample} \
       -t ~{reference_name} \
       -F ~{downsample_fraction} \
@@ -99,7 +99,7 @@ task get_depths {
   String output_prefix = "~{associated_sample}_~{reference_name}"
   command <<<
     echo "DEBUG: calculating amplicon depths"
-    python3 scripts/get_depth_windows.py \
+    scripts/get_depth_windows.py \
       -b ~{amplicon_bed} \
       -d ~{depth_file} \
       -s ~{associated_sample} \
@@ -107,7 +107,7 @@ task get_depths {
       -o ~{output_prefix}_ampdepth.txt
 
     echo "DEBUG: calculating gene depths"
-    python3 scripts/get_depth_windows.py \
+    scripts/get_depth_windows.py \
       -g ~{reference_gff} \
       -d ~{depth_file} \
       -s ~{associated_sample} \
@@ -145,13 +145,13 @@ task get_diversity {
   }
   command <<<
     echo "DEBUG: calculating amplicon nucleotide diversity (pi)"
-    python3 get_refdist_distribution.py \
+    get_refdist_distribution.py \
       -v ~{bcftools_vcf} \
       -b ~{amplicon_bed} \
       -o ~{reference_name}_ampdiv.txt 
 
     echo "DEBUG: calculating amplicon nucleotide diversity (pi)"
-    python3 get_refdist_distribution.py \
+    get_refdist_distribution.py \
       -v ~{bcftools_vcf} \
       -g ~{reference_gff} \
       -o ~{reference_name}_ampdiv.txt 
@@ -185,7 +185,7 @@ task get_diversity_metrics {
   }
   command <<<
     echo "DEBUG: calculating diversity metrics"
-    python3 get_pidp_ranges.py \
+    get_pidp_ranges.py \
       --vcf ~{bcftools_vcf} \
       --depth ~{depth_file} \
       --bed ~{primer_bed} \
@@ -224,7 +224,7 @@ task get_genotyping_report {
   }
   command <<<
     echo "DEBUG: calculating genotyping report"
-    python3 get_pi_ranges.py \
+    get_pi_ranges.py \
       --vcf ~{trimmed_vcf} \
       --bed ~{primer_bed} \
       --out ~{reference_name}_primer
@@ -263,7 +263,7 @@ task call_rsvab {
   }
   command <<<
     echo "DEBUG: calling RSVA/RSVB"
-    python3 call_RSVAB.py \
+    call_RSVAB.py \
       --alignstats ~{concatenated_alignment_stats} \
       --coverage ~{min_coverage} \
       --ratio = ~{min_ratio} \
