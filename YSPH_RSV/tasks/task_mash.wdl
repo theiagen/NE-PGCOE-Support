@@ -45,7 +45,7 @@ task mash {
     awk -v dist=~{max_mash_dist} -v prob=~{max_mash_prob} -v sample=~{samplename} '($3+0 < dist+0 && $4+0 < prob+0) {sub(".fasta","",$1); print sample, $1}' ~{samplename}_mash.txt > ~{samplename}_calls.txt
 
     while read -r line; do
-      FILENAME=$(echo "$line" | cut -f2)
+      FILENAME=$(echo "$line" | cut -f1)
       REF_BASENAME=$(basename ${FILENAME/.fasta/})
 
       echo "DEBUG: extracting path of the reference files for downstream usage"
