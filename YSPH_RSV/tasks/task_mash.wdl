@@ -22,16 +22,16 @@ task mash {
     Int memory = 4
   }
   command <<<
-    set -euo pipefail
-
     mash --version | tee MASH_VERSION
 
     echo "DEBUG: Extracting top ~{number_of_reads} reads from input files"
     let "LINES = ~{number_of_reads} / 2 * 4"
     for file in ~{read1} ~{read2}; do
-      BASENAME=$(basename ${file/fastq.gz/head.fastq})
+      # this causes pipefailure since the head cuts it off at 20000 reads or so
       gunzip -dc $file | head -n $LINES >> ~{samplename}_~{number_of_reads}.fastq
     done
+
+    set -euo pipefail
 
     echo "DEBUG: mashing reads against the reference hashes"
     mash dist \
