@@ -77,14 +77,14 @@ workflow rsveillance {
       call stats.get_depth_histogram {
         input:
           depth_file = bwa.depth_file,
-          reference_name = assembly_current_reference_fasta,
+          reference_name = assembly_current_reference_name,
           associated_sample = current_sample
       }
       call stats.get_alignment_stats {
         input:
           alignment_flagstat = bwa.flagstat,
           depth_histogram = get_depth_histogram.depth_histogram,
-          reference_name = assembly_current_reference_fasta,
+          reference_name = assembly_current_reference_name,
           associated_sample = current_sample
       }
       call stats.get_depths {
