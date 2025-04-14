@@ -48,7 +48,7 @@ task mash {
 
       echo "DEBUG: extracting path of the reference files for downstream usage"
       REFERENCE_FASTA="~{reference_files_gcuri}/${FILENAME}.fasta"
-      REFERENCE_GFF="~{reference_files_gcuri}/${FILENAME}.gff"
+      REFERENCE_GFF="~{reference_files_gcuri}/${FILENAME}.gff3"
       echo "$REFERENCE_FASTA" >> ~{samplename}_fastas.txt
       echo "$REFERENCE_GFF" >> ~{samplename}_gffs.txt
       echo "${FILENAME}" >> ~{samplename}_references.txt
