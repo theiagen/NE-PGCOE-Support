@@ -13,7 +13,7 @@ task mash {
     Int number_of_reads = 10000
     Int bloom_filter = 10
     String genome_size = "11k"
-    Float max_mash_prob = 0.00000000000000000000000000000000000000000000000001 # this is so silly but dockstore hated 1e-50
+    String max_mash_prob = "1e-50"
     Float max_mash_dist = 0.25
 
     Int cpu = 2
@@ -27,7 +27,6 @@ task mash {
     echo "DEBUG: Extracting top ~{number_of_reads} reads from input files"
     let "LINES = ~{number_of_reads} / 2 * 4"
     for file in ~{read1} ~{read2}; do
-      # this causes pipefailure since the head cuts it off at 20000 reads or so
       gunzip -dc $file | head -n $LINES >> ~{samplename}_~{number_of_reads}.fastq
     done
 
@@ -45,14 +44,14 @@ task mash {
     awk -v dist=~{max_mash_dist} -v prob=~{max_mash_prob} -v sample=~{samplename} '($3+0 < dist+0 && $4+0 < prob+0) {sub(".fasta","",$1); print sample, $1}' ~{samplename}_mash.txt > ~{samplename}_calls.txt
 
     while read -r line; do
-      FILENAME=$(echo "$line" | cut -f2)
+      FILENAME=$(echo "$line" | cut -d' ' -f2)
 
       echo "DEBUG: extracting path of the reference files for downstream usage"
       REFERENCE_FASTA="~{reference_files_gcuri}/${FILENAME}.fasta"
       REFERENCE_GFF="~{reference_files_gcuri}/${FILENAME}.gff"
       echo "$REFERENCE_FASTA" >> ~{samplename}_fastas.txt
       echo "$REFERENCE_GFF" >> ~{samplename}_gffs.txt
-      echo "$REF_BASENAME" >> ~{samplename}_references.txt
+      echo "${FILENAME}" >> ~{samplename}_references.txt
       echo "~{samplename}" >> ~{samplename}_samples.txt
     done < ~{samplename}_calls.txt
   >>>
