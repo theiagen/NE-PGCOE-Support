@@ -16,15 +16,13 @@ task bcftools {
     Int memory = 24
   }
   command <<<
-    echo ~{sep="\n" input_bam} > bam_list.txt
-
     echo "DEBUG: creating mpileup file"
     bcftools mpileup \
       -Ov \
       --threads ~{threads} \
       -o ~{output_prefix}_variants.vcf \
       -f ~{reference_fasta} \
-      -b bam_list.txt
+      ~{sep=" " input_bam}
 
     echo "DEBUG: calling variants"
     bcftools call \
