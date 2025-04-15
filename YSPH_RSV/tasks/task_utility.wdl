@@ -100,7 +100,7 @@ task create_sample_output_group {
     String docker = "us-docker.pkg.dev/general-theiagen/theiagen/alpine-plus-bash:3.20.0"
   }
   command <<<
-    echo -e "~{reference_name}\t~{reference_fasta}\t~{trimmed_bam}\t~{trimmed_bai}\t~{untrimmed_bam}\t~{untrimmed_bai}\t{~depth_windows}\t~{depth_histograms}\t~{alignment_stats}\t~{amplicon_depths}\t~{gene_depths}\t~{sample_name}" > reference_info.txt
+    echo -e "~{reference_name}\t~{reference_fasta}\t~{trimmed_bam}\t~{trimmed_bai}\t~{untrimmed_bam}\t~{untrimmed_bai}\t{~depth_windows}\t~{depth_histograms}\t~{alignment_stats}\t~{amplicon_depths}\t~{gene_depths}\t~{sample_name}" > sample_reference_info.txt
   >>>
   output {
     File sample_output_group = "sample_reference_info.txt"
