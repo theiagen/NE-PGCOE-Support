@@ -266,7 +266,7 @@ task call_rsvab {
     call_RSVAB.py \
       --alignstats ~{concatenated_alignment_stats} \
       --coverage ~{min_coverage} \
-      --ratio = ~{min_ratio} \
+      --ratio ~{min_ratio} \
       --out "final"
   >>>
   output {
