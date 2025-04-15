@@ -35,16 +35,18 @@ task create_reference_groups {
       echo $alignment_stats >> ${reference_name}_alignment_stats.txt
       echo $amplicon_depths >> ${reference_name}_amplicon_depths.txt
       echo $gene_depths >> ${reference_name}_gene_depths.txt
-      echo $sample_name >> ${reference_name}_sample_name.txt
+      echo $sample_name >> all_sample_names.txt
 
     done
 
     sort -u all_reference_names.txt > unique_reference_names.txt
     sort -u all_reference_fastas.txt > unique_reference_fastas.txt
+    sort -u all_sample_names.txt > unique_sample_names.txt
   >>>
   output {
     Array[String] unique_reference_names = read_lines("unique_reference_names.txt")
     Array[File] unique_reference_fastas = read_lines("unique_reference_fastas.txt")
+    Array[String] all_sample_names = read_lines("unique_sample_names.txt")
     Array[File] all_trimmed_bams = glob("*_trimmed_bam.txt")
     Array[File] all_trimmed_bais = glob("*_trimmed_bais.txt")
     Array[File] all_untrimmed_bams = glob("*_untrimmed_bams.txt")
@@ -54,7 +56,6 @@ task create_reference_groups {
     Array[File] all_alignment_stats = glob("*_alignment_stats.txt")
     Array[File] all_amplicon_depths = glob("*_amplicon_depths.txt")
     Array[File] all_gene_depths = glob("*_gene_depths.txt")
-    Array[File] all_sample_names = glob("*_sample_names.txt")
   }
   runtime {
     docker: docker
