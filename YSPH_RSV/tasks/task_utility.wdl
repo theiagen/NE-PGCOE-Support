@@ -131,7 +131,7 @@ task concatenate_stats_by_reference {
     cat ~{sep=" " amplicon_depths} > ~{reference_name}_amplicon_depths.txt
 
     echo "DEBUG: concatenating gene depths"
-    cat ~{sep=" " gene_depths} > g~{reference_name}_gene_depths.txt
+    cat ~{sep=" " gene_depths} > ~{reference_name}_gene_depths.txt
 
   >>>
   output {
