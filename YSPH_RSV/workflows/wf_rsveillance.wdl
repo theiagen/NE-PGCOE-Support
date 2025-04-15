@@ -124,7 +124,6 @@ workflow rsveillance {
     Array[File] current_trimmed_bais = read_lines(create_reference_groups.all_trimmed_bais[i])
     Array[File] current_untrimmed_bams = read_lines(create_reference_groups.all_untrimmed_bams[i])
     Array[File] current_untrimmed_bais = read_lines(create_reference_groups.all_untrimmed_bais[i])
-    Array[String] current_sample_names = read_lines(create_reference_groups.all_sample_names[i])
 
     call bcftools_task.bcftools as bcftools_trimmed {
       input:

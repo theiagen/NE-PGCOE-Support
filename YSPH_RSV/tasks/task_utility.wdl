@@ -22,7 +22,6 @@ task create_reference_groups {
       alignment_stats=$(cut -f9 $file)
       amplicon_depths=$(cut -f10 $file)
       gene_depths=$(cut -f11 $file)
-      sample_name=$(cut -f12 $file)
 
       echo $reference_name >> all_reference_names.txt
       echo $reference_fasta >> all_reference_fastas.txt
@@ -35,22 +34,19 @@ task create_reference_groups {
       echo $alignment_stats >> ${reference_name}_alignment_stats.txt
       echo $amplicon_depths >> ${reference_name}_amplicon_depths.txt
       echo $gene_depths >> ${reference_name}_gene_depths.txt
-      echo $sample_name >> all_sample_names.txt
 
     done
 
     sort -u all_reference_names.txt > unique_reference_names.txt
     sort -u all_reference_fastas.txt > unique_reference_fastas.txt
-    sort -u all_sample_names.txt > unique_sample_names.txt
   >>>
   output {
     Array[String] unique_reference_names = read_lines("unique_reference_names.txt")
     Array[File] unique_reference_fastas = read_lines("unique_reference_fastas.txt")
-    Array[String] all_sample_names = read_lines("unique_sample_names.txt")
     Array[File] all_trimmed_bams = glob("*_trimmed_bam.txt")
-    Array[File] all_trimmed_bais = glob("*_trimmed_bais.txt")
-    Array[File] all_untrimmed_bams = glob("*_untrimmed_bams.txt")
-    Array[File] all_untrimmed_bais = glob("*_untrimmed_bais.txt")
+    Array[File] all_trimmed_bais = glob("*_trimmed_bai.txt")
+    Array[File] all_untrimmed_bams = glob("*_untrimmed_bam.txt")
+    Array[File] all_untrimmed_bais = glob("*_untrimmed_bai.txt")
     Array[File] all_depth_windows = glob("*_depth_windows.txt")
     Array[File] all_depth_histograms = glob("*_depth_histograms.txt")
     Array[File] all_alignment_stats = glob("*_alignment_stats.txt")
