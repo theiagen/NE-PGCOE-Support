@@ -61,8 +61,8 @@ task mash {
     String mash_version = read_string("MASH_VERSION")
     File mash_calls = "~{samplename}_calls.txt"
     File mash_output = "~{samplename}_mash.txt"
-    Array[File] reference_fastas = read_lines("~{samplename}_fastas.txt")
-    Array[File] reference_gffs = read_lines("~{samplename}_gffs.txt")
+    Array[String] reference_fastas = read_lines("~{samplename}_fastas.txt")
+    Array[String] reference_gffs = read_lines("~{samplename}_gffs.txt")
     Array[String] reference_names = read_lines("~{samplename}_references.txt")
     Array[String] associated_samples = read_lines("~{samplename}_samples.txt")
   }

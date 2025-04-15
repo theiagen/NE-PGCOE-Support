@@ -41,32 +41,20 @@ task create_reference_groups {
 
     sort -u all_reference_names.txt > unique_reference_names.txt
     sort -u all_reference_fastas.txt > unique_reference_fastas.txt
-
-    ls *_trimmed_bam.txt > all_trimmed_bams.txt
-    ls *_trimmed_bai.txt > all_trimmed_bais.txt
-    ls *_untrimmed_bam.txt > all_untrimmed_bams.txt
-    ls *_untrimmed_bai.txt > all_untrimmed_bais.txt
-    ls *_depth_windows.txt > all_depth_windows.txt
-    ls *_depth_histograms.txt > all_depth_histograms.txt
-    ls *_alignment_stats.txt > all_alignment_stats.txt
-    ls *_amplicon_depths.txt > all_amplicon_depths.txt
-    ls *_gene_depths.txt > all_gene_depths.txt
-    ls *_sample_name.txt > all_sample_names.txt
-
   >>>
   output {
     Array[String] unique_reference_names = read_lines("unique_reference_names.txt")
     Array[File] unique_reference_fastas = read_lines("unique_reference_fastas.txt")
-    Array[File] all_trimmed_bams = read_lines("all_trimmed_bams.txt")
-    Array[File] all_trimmed_bais = read_lines("all_trimmed_bais.txt")
-    Array[File] all_untrimmed_bams = read_lines("all_untrimmed_bams.txt")
-    Array[File] all_untrimmed_bais = read_lines("all_untrimmed_bais.txt")
-    Array[File] all_depth_windows = read_lines("all_depth_windows.txt")
-    Array[File] all_depth_histograms = read_lines("all_depth_histograms.txt")
-    Array[File] all_alignment_stats = read_lines("all_alignment_stats.txt")
-    Array[File] all_amplicon_depths = read_lines("all_amplicon_depths.txt")
-    Array[File] all_gene_depths = read_lines("all_gene_depths.txt")
-    Array[File] all_sample_names = read_lines("all_sample_names.txt")
+    Array[File] all_trimmed_bams = glob("*_trimmed_bam.txt")
+    Array[File] all_trimmed_bais = glob("*_trimmed_bais.txt")
+    Array[File] all_untrimmed_bams = glob("*_untrimmed_bams.txt")
+    Array[File] all_untrimmed_bais = glob("*_untrimmed_bais.txt")
+    Array[File] all_depth_windows = glob("*_depth_windows.txt")
+    Array[File] all_depth_histograms = glob("*_depth_histograms.txt")
+    Array[File] all_alignment_stats = glob("*_alignment_stats.txt")
+    Array[File] all_amplicon_depths = glob("*_amplicon_depths.txt")
+    Array[File] all_gene_depths = glob("*_gene_depths.txt")
+    Array[File] all_sample_names = glob("*_sample_names.txt")
   }
   runtime {
     docker: docker
@@ -100,7 +88,7 @@ task create_sample_output_group {
     String docker = "us-docker.pkg.dev/general-theiagen/theiagen/alpine-plus-bash:3.20.0"
   }
   command <<<
-    echo -e "~{reference_name}\t~{reference_fasta}\t~{trimmed_bam}\t~{trimmed_bai}\t~{untrimmed_bam}\t~{untrimmed_bai}\t{~depth_windows}\t~{depth_histograms}\t~{alignment_stats}\t~{amplicon_depths}\t~{gene_depths}\t~{sample_name}" > sample_reference_info.txt
+    echo -e "~{reference_name}\t~{reference_fasta}\t~{trimmed_bam}\t~{trimmed_bai}\t~{untrimmed_bam}\t~{untrimmed_bai}\t~{depth_windows}\t~{depth_histograms}\t~{alignment_stats}\t~{amplicon_depths}\t~{gene_depths}\t~{sample_name}" > sample_reference_info.txt
   >>>
   output {
     File sample_output_group = "sample_reference_info.txt"
