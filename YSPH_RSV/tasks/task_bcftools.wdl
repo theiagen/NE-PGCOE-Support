@@ -16,7 +16,7 @@ task bcftools {
     Int memory = 24
   }
   command <<<
-    cat ~{sep="\n" input_bam} > bam_list.txt
+    echo ~{sep="\n" input_bam} > bam_list.txt
 
     echo "DEBUG: creating mpileup file"
     bcftools mpileup \
