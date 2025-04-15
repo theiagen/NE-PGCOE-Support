@@ -43,6 +43,8 @@ task mash {
     echo "DEBUG: Pulling matches below ~{max_mash_dist}/~{max_mash_prob} from mash output"
     awk -v dist=~{max_mash_dist} -v prob=~{max_mash_prob} -v sample=~{samplename} '($3+0 < dist+0 && $4+0 < prob+0) {sub(".fasta","",$1); print sample, $1}' ~{samplename}_mash.txt > ~{samplename}_calls.txt
 
+    touch ~{samplename}_fastas.txt ~{samplename}_gffs.txt ~{samplename}_references.txt ~{samplename}_samples.txt
+    
     while read -r line; do
       FILENAME=$(echo "$line" | cut -d' ' -f2)
 

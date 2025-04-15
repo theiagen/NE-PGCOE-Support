@@ -99,7 +99,7 @@ task get_depths {
   String output_prefix = "~{associated_sample}_~{reference_name}"
   command <<<
     echo "DEBUG: calculating amplicon depths"
-    scripts/get_depth_windows.py \
+    get_depth_windows.py \
       -b ~{amplicon_bed} \
       -d ~{depth_file} \
       -s ~{associated_sample} \
@@ -107,7 +107,7 @@ task get_depths {
       -o ~{output_prefix}_ampdepth.txt
 
     echo "DEBUG: calculating gene depths"
-    scripts/get_depth_windows.py \
+    get_depth_windows.py \
       -g ~{reference_gff} \
       -d ~{depth_file} \
       -s ~{associated_sample} \
