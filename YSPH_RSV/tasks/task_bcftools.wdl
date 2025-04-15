@@ -16,6 +16,8 @@ task bcftools {
     Int memory = 24
   }
   command <<<
+    bcftools --version | head -n1 | tee VERSION
+
     echo "DEBUG: creating mpileup file"
     bcftools mpileup \
       -Ov \
@@ -32,22 +34,16 @@ task bcftools {
       -o ~{output_prefix}_all_unfiltered.vcf.gz \
       ~{output_prefix}_variants.vcf
 
-    echo "DEBUG: indexing variants"
-    tabix -p vcf ~{output_prefix}_all_unfiltered.vcf.gz
-
     echo "DEBUG: filtering variants"
     bcftools filter \
       -O z \
       -o ~{output_prefix}_all.vcf.gz \
       -i 'QUAL>10 && DP>10' \
       ~{output_prefix}_all_unfiltered.vcf.gz
-
-    echo "DEBUG: indexing filtered variants"
-    tabix -p vcf ~{output_prefix}_all.vcf.gz
   >>>
   output {
+    String bcftools_version = read_string("VERSION")
     File filtered_vcf = "~{output_prefix}_all.vcf.gz"
-    File filtered_vcf_index = "~{output_prefix}_all.vcf.gz.tbi"
   }
   runtime {
     docker: docker
