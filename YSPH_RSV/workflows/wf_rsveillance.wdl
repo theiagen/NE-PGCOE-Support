@@ -167,28 +167,46 @@ workflow rsveillance {
         concatenated_alignment_stats = concatenate_stats_by_reference.concatenated_alignment_stats,
     }
   }
+  call stats.final_concatenation {
+    input:
+      depth_windows = concatenate_stats_by_reference.concatenated_depth_windows,
+      depth_histograms = concatenate_stats_by_reference.concatenated_depth_histograms,
+      amplicon_depths = concatenate_stats_by_reference.concatenated_amplicon_depths,
+      gene_depths = concatenate_stats_by_reference.concatenated_gene_depths,
+      amplicon_diversities = get_diversity.amplicon_diversity,
+      gene_diversities = get_diversity.gene_diversity,
+      genotyping_reports = get_genotyping_report.trimmed_pi,
+      untrimmed_genotyping_reports = get_genotyping_report.untrimmed_pi,
+      final_calls = call_rsvab.final_calls,
+      final_alignment_stats = call_rsvab.final_alignment_stats,
+  }
   output {
     String rsveillance_version = version_capture.version
     String rsveillance_analysis_date = version_capture.date
 
     String mash_version = mash_index.mash_version
 
-    # these following inputs are in a double scatter and require a flatten([])
     String bwa_version = flatten(bwa.bwa_version)[0]
     String samtools_version = flatten(bwa.samtools_version)[0]
     String statistics_docker_image = flatten(get_depth_histogram.stats_docker)[0]
     String ivar_version = flatten(ivar_consensus.ivar_version)[0]
     Array[File] assembly_fastas = flatten(ivar_consensus.assembly_fasta)
     
-    String bcftools_version = bcftools_trimmed.filtered_vcf[0]
+    String bcftools_version = bcftools_trimmed.bcftools_version[0]
     Array[File] filtered_vcfs = bcftools_trimmed.filtered_vcf
     Array[File] unfiltered_vcfs = bcftools_untrimmed.filtered_vcf
 
-    Array[File] alignment_stats = concatenate_stats_by_reference.concatenated_alignment_stats
-    Array[File] amplicon_depths = concatenate_stats_by_reference.concatenated_amplicon_depths
+    File depth_windows = final_concatenation.all_depth_windows
+    File depth_histograms = final_concatenation.all_depth_histograms
+    File alignment_stats = final_concatenation.all_alignment_stats
+    File amplicon_depths = final_concatenation.all_amplicon_depths
+    File gene_depths = final_concatenation.all_gene_depths
+    File amplicon_diversity = final_concatenation.all_amplicon_diversities
+    File gene_diversity = final_concatenation.all_gene_diversities
+    File trimmed_pi = final_concatenation.all_trimmed_pis
+    File untrimmed_pi = final_concatenation.all_untrimmed_pis
 
-    Array[File] final_calls = call_rsvab.final_calls
-    Array[File] final_alignment_stats = call_rsvab.final_alignment_stats
-    
+    File final_calls = final_concatenation.final_calls
+    File final_alignment_stats = final_concatenation.final_alignment_stats
   }
 }

@@ -172,45 +172,6 @@ task get_diversity {
   }
 }
 
-task get_diversity_metrics {
-  input {
-    File bcftools_vcf
-    File depth_file
-    File primer_bed
-    String reference_name
-
-    Int cpu = 1
-    Int memory = 4
-    Int disk_size = 100
-    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/rsveillance:0.1"
-  }
-  command <<<
-    echo "DEBUG: calculating diversity metrics"
-    get_pidp_ranges.py \
-      --vcf ~{bcftools_vcf} \
-      --depth ~{depth_file} \
-      --bed ~{primer_bed} \
-      --out ~{reference_name}_primer-stats
-  >>>
-  output {
-    File mean_depth = "~{reference_name}_primer-stats_meandp.tsv"
-    File mean_depth_plot = "~{reference_name}_primer-stats_meandp.png"
-    File covpc = "~{reference_name}_primer-stats_covpc.tsv"
-    File covpc_plot = "~{reference_name}_primer-stats_covpc.png"
-    File pi = "~{reference_name}_primer-stats_pi.tsv"
-    File pi_plot = "~{reference_name}_primer-stats_pi.png"
-  }
-  runtime {
-    docker: docker
-    memory: memory + " GB"
-    cpu: cpu
-    disks:  "local-disk " + disk_size + " SSD"
-    disk: disk_size + " GB"
-    preemptible: 0
-    maxRetries: 3
-  }
-}
-
 task get_genotyping_report {
   input {
     File trimmed_vcf

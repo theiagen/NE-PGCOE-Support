@@ -101,7 +101,6 @@ task create_sample_output_group {
   }
 }
 
-
 task concatenate_stats_by_reference {
   input {
     Array[File] depth_windows
@@ -115,7 +114,7 @@ task concatenate_stats_by_reference {
     Int cpu = 1
     Int memory = 2
     Int disk_size = 25
-    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/rsveillance:0.1"
+    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/alpine-plus-bash:3.20.0"
   }
   command <<<
     echo "DEBUG: concatenating depth windows"
@@ -140,6 +139,63 @@ task concatenate_stats_by_reference {
     File concatenated_alignment_stats = "~{reference_name}_alignment_stats.txt"
     File concatenated_amplicon_depths = "~{reference_name}_amplicon_depths.txt"
     File concatenated_gene_depths = "~{reference_name}_gene_depths.txt"
+  }
+  runtime {
+    docker: docker
+    memory: memory + " GB"
+    cpu: cpu
+    disks:  "local-disk " + disk_size + " SSD"
+    disk: disk_size + " GB"
+    preemptible: 0
+    maxRetries: 3
+  }
+}
+
+task final_concatenation {
+  input {
+    Array[File] depth_windows
+    Array[File] depth_histograms
+    Array[File] alignment_stats
+    Array[File] amplicon_depths
+    Array[File] gene_depths
+    Array[File] amplicon_diversities
+    Array[File] gene_diversities
+    Array[File] trimmed_pis
+    Array[File] untrimmed_pis
+    Array[File] final_calls
+    Array[File] final_alignment_stats
+
+    Int cpu = 1
+    Int memory = 2
+    Int disk_size = 25
+    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/alpine-plus-bash:3.20.0"
+  }
+  command <<<
+    cat ~{sep=" " depth_windows} > all_depth_windows.txt
+    cat ~{sep=" " depth_histograms} > all_depth_histograms.txt
+    cat ~{sep=" " alignment_stats} > all_alignment_stats.txt
+    cat ~{sep=" " amplicon_depths} > all_amplicon_depths.txt
+    cat ~{sep=" " gene_depths} > all_gene_depths.txt
+    cat ~{sep=" " amplicon_diversities} > all_amplicon_diversities.txt
+    cat ~{sep=" " gene_diversities} > all_gene_diversities.txt
+    cat ~{sep=" " trimmed_pis} > all_trimmed_pis.tsv
+    cat ~{sep=" " untrimmed_pis} > all_untrimmed_pis.tsv
+    cat ~{sep=" " final_calls} > final_calls.txt
+    cat ~{sep=" " final_alignment_stats} > final_alignment_stats.txt
+  >>>
+  output {
+    File all_depth_windows = "all_depth_windows.txt"
+    File all_depth_histograms = "all_depth_histograms.txt"
+    File all_alignment_stats = "all_alignment_stats.txt"
+    File all_amplicon_depths = "all_amplicon_depths.txt"
+    File all_gene_depths = "all_gene_depths.txt"
+    File all_amplicon_diversities = "all_amplicon_diversities.txt"
+    File all_gene_diversities = "all_gene_diversities.txt"
+    File all_trimmed_pis = "all_trimmed_pis.tsv"
+    File all_untrimmed_pis = "all_untrimmed_pis.tsv"
+    File all_final_calls = "final_calls.txt"
+    File all_alignment_stats = "final_alignment_stats.txt"
+
   }
   runtime {
     docker: docker
