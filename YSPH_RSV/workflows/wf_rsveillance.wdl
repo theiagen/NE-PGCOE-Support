@@ -167,7 +167,7 @@ workflow rsveillance {
         concatenated_alignment_stats = concatenate_stats_by_reference.concatenated_alignment_stats,
     }
   }
-  call stats.final_concatenation {
+  call utility.final_concatenation {
     input:
       depth_windows = concatenate_stats_by_reference.concatenated_depth_windows,
       depth_histograms = concatenate_stats_by_reference.concatenated_depth_histograms,
