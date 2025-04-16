@@ -141,7 +141,7 @@ workflow rsveillance {
     } 
     call stats.get_diversity {
       input:
-        bcftools_vcf = bcftools_trimmed.filtered_vcf,
+        bcftools_vcf = bcftools_trimmed.filtered_vcf_noinfo,
         amplicon_bed = reference_files_gcuri + "/" + current_reference_name + "_amplicon.bed",
         reference_gff = reference_files_gcuri + "/" + current_reference_name + ".gff3",
         reference_name = current_reference_name
@@ -157,8 +157,8 @@ workflow rsveillance {
     }
     call stats.get_genotyping_report {
       input:
-        trimmed_vcf = bcftools_trimmed.filtered_vcf,
-        untrimmed_vcf = bcftools_untrimmed.filtered_vcf,
+        trimmed_vcf = bcftools_trimmed.filtered_vcf_noinfo,
+        untrimmed_vcf = bcftools_untrimmed.filtered_vcf_noinfo,
         primer_bed = reference_files_gcuri + "/" + current_reference_name + "_primer.bed",
         reference_name = current_reference_name
     }
@@ -170,10 +170,25 @@ workflow rsveillance {
   output {
     String rsveillance_version = version_capture.version
     String rsveillance_analysis_date = version_capture.date
+
+    String mash_version = mash_index.mash_version
+
+    # these following inputs are in a double scatter and require a flatten([])
+    String bwa_version = flatten(bwa.bwa_version)[0]
+    String samtools_version = flatten(bwa.samtools_version)[0]
+    String statistics_docker_image = flatten(get_depth_histogram.stats_docker)[0]
+    String ivar_version = flatten(ivar_consensus.ivar_version)[0]
+    Array[File] assembly_fastas = flatten(ivar_consensus.assembly_fasta)
+    
+    String bcftools_version = bcftools_trimmed.filtered_vcf[0]
+    Array[File] filtered_vcfs = bcftools_trimmed.filtered_vcf
+    Array[File] unfiltered_vcfs = bcftools_untrimmed.filtered_vcf
+
+    Array[File] alignment_stats = concatenate_stats_by_reference.concatenated_alignment_stats
+    Array[File] amplicon_depths = concatenate_stats_by_reference.concatenated_amplicon_depths
+
     Array[File] final_calls = call_rsvab.final_calls
     Array[File] final_alignment_stats = call_rsvab.final_alignment_stats
-    Array[File] alignment_stats = concatenate_stats_by_reference.concatenated_alignment_stats
-    Array[File] assembly_fasta = flatten(ivar_consensus.assembly_fasta)
-    Array[File] amplicon_depths = concatenate_stats_by_reference.concatenated_amplicon_depths
+    
   }
 }

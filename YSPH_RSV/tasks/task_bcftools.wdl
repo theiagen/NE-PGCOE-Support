@@ -40,10 +40,13 @@ task bcftools {
       -o ~{output_prefix}_all.vcf.gz \
       -i 'QUAL>10 && DP>10' \
       ~{output_prefix}_all_unfiltered.vcf.gz
+
+    bcftools view ~{output_prefix}_all.vcf.gz | sed '/^##INFO/d' | bcftools view -O z -o ~{output_prefix}_all_noinfo.vcf.gz
   >>>
   output {
     String bcftools_version = read_string("VERSION")
     File filtered_vcf = "~{output_prefix}_all.vcf.gz"
+    File filtered_vcf_noinfo = "~{output_prefix}_all_noinfo.vcf.gz"
   }
   runtime {
     docker: docker

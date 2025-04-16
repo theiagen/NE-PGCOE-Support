@@ -25,6 +25,7 @@ task get_depth_histogram {
       -o ~{output_prefix}
   >>>
   output {
+    String stats_docker = docker
     File depth_windows = " ~{output_prefix}_depthwins.txt"
     File depth_histogram = " ~{output_prefix}_depthhist.txt"
   }
@@ -224,6 +225,8 @@ task get_genotyping_report {
   }
   command <<<
     echo "DEBUG: calculating genotyping report"
+
+
     get_pi_ranges.py \
       --vcf ~{trimmed_vcf} \
       --bed ~{primer_bed} \
