@@ -175,8 +175,8 @@ workflow rsveillance {
       gene_depths = concatenate_stats_by_reference.concatenated_gene_depths,
       amplicon_diversities = get_diversity.amplicon_diversity,
       gene_diversities = get_diversity.gene_diversity,
-      genotyping_reports = get_genotyping_report.trimmed_pi,
-      untrimmed_genotyping_reports = get_genotyping_report.untrimmed_pi,
+      trimmed_pis = get_genotyping_report.trimmed_pi,
+      untrimmed_pis = get_genotyping_report.untrimmed_pi,
       final_calls = call_rsvab.final_calls,
       final_alignment_stats = call_rsvab.final_alignment_stats,
   }
