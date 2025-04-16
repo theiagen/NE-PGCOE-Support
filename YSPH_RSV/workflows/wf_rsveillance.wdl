@@ -206,7 +206,7 @@ workflow rsveillance {
     File trimmed_pi = final_concatenation.all_trimmed_pis
     File untrimmed_pi = final_concatenation.all_untrimmed_pis
 
-    File final_calls = final_concatenation.final_calls
-    File final_alignment_stats = final_concatenation.final_alignment_stats
+    File final_calls = final_concatenation.all_final_calls
+    File final_alignment_stats = final_concatenation.all_final_alignment_stats
   }
 }
