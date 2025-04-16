@@ -171,6 +171,7 @@ workflow rsveillance {
     input:
       depth_windows = concatenate_stats_by_reference.concatenated_depth_windows,
       depth_histograms = concatenate_stats_by_reference.concatenated_depth_histograms,
+      alignment_stats = concatenate_stats_by_reference.concatenated_alignment_stats,
       amplicon_depths = concatenate_stats_by_reference.concatenated_amplicon_depths,
       gene_depths = concatenate_stats_by_reference.concatenated_gene_depths,
       amplicon_diversities = get_diversity.amplicon_diversity,
