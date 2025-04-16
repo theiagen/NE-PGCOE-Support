@@ -226,13 +226,12 @@ task get_genotyping_report {
   command <<<
     echo "DEBUG: calculating genotyping report"
 
-
     get_pi_ranges.py \
       --vcf ~{trimmed_vcf} \
       --bed ~{primer_bed} \
       --out ~{reference_name}_primer
 
-    python3 get_pi_ranges.py \
+    get_pi_ranges.py \
       --vcf ~{untrimmed_vcf} \
       --bed ~{primer_bed} \
       --out ~{reference_name}_untrim-primer

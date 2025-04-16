@@ -44,7 +44,7 @@ task bcftools {
     # this line is done because of a malformed info field that has a 'Version="3"' column in the INFO field that causes the scikit-allel to fail
     #   /opt/conda/lib/python3.12/site-packages/allel/io/vcf_read.py:1732: UserWarning: invalid INFO header: '##INFO=<ID=VDB,Number=1,Type=Float,Description="Variant Distance Bias for filtering splice-site artefacts in RNA-seq data (bigger is better)",Version="3">\n'
     #   warnings.warn('invalid INFO header: %r' % header)
-    # because of this, I'm making a duplicate version of the VCF that has all INFO fields removed just in case as they are not needed for the analysis
+    # because of this, I'm making a duplicate version of the VCF that has all INFO fields removed just in case as they are not needed for any analysis but are primarily useful for human usage
     bcftools view ~{output_prefix}_all.vcf.gz | sed '/^##INFO/d' | bcftools view -O z -o ~{output_prefix}_all_noinfo.vcf.gz
   >>>
   output {
