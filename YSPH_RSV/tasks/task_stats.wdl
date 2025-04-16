@@ -151,11 +151,11 @@ task get_diversity {
       -b ~{amplicon_bed} \
       -o ~{reference_name}_ampdiv.txt 
 
-    echo "DEBUG: calculating amplicon nucleotide diversity (pi)"
+    echo "DEBUG: calculating gene nucleotide diversity (pi)"
     get_refdist_distribution.py \
       -v ~{bcftools_vcf} \
       -g ~{reference_gff} \
-      -o ~{reference_name}_ampdiv.txt 
+      -o ~{reference_name}_genediv.txt 
   >>>
   output {
     File amplicon_diversity = "~{reference_name}_ampdiv.txt"
