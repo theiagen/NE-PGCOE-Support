@@ -194,7 +194,7 @@ task final_concatenation {
     File all_trimmed_pis = "all_trimmed_pis.tsv"
     File all_untrimmed_pis = "all_untrimmed_pis.tsv"
     File all_final_calls = "final_calls.txt"
-    File all_alignment_stats = "final_alignment_stats.txt"
+    File all_final_alignment_stats = "final_alignment_stats.txt"
 
   }
   runtime {
